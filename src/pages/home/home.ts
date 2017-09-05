@@ -10,6 +10,7 @@ declare var google;
 export class HomePage {
   @ViewChild('map') mapElement
   map: any;
+  marker: any = null;
   constructor(public navCtrl: NavController, private geolocation: Geolocation) {
 
   }
@@ -40,7 +41,9 @@ export class HomePage {
   }
 
   addMarker(position){
-    var marker = new google.maps.Marker({
+    if(this.marker)
+      this.marker.setMap(null);
+    this.marker = new google.maps.Marker({
       map: this.map,
       animation: google.maps.Animation.DROP,
       position: position
