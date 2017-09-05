@@ -29,9 +29,22 @@ export class HomePage {
       }
 
       this.map = new google.maps.Map(this.mapElement.nativeElement, mapOptions);
+      var self = this;
+      this.map.addListener('click', function(event){
+        self.addMarker(event.latLng);
+      });
+
     }, (err) => {
       console.log(err);
     });
   }
 
+  addMarker(position){
+    var marker = new google.maps.Marker({
+      map: this.map,
+      animation: google.maps.Animation.DROP,
+      position: position
+    });
+      this.map.panTo(position);
+  }
 }
