@@ -11,8 +11,20 @@ export class HomePage {
   @ViewChild('map') mapElement
   map: any;
   marker: any = null;
-  constructor(public navCtrl: NavController, private geolocation: Geolocation) {
+  currentPositionMarker: any = null;
+  lockBtnText: String = "Lock Marker";
 
+  circle = {
+      path: google.maps.SymbolPath.CIRCLE,
+      fillColor: 'blue',
+      fillOpacity: 0.5,
+      scale: 7.5,
+      strokeColor: 'white',
+      strokeWeight: 2
+    };
+
+  constructor(public navCtrl: NavController, private geolocation: Geolocation) {
+    
   }
 
   ionViewDidLoad(){
@@ -35,28 +47,63 @@ export class HomePage {
 
             this.map.setOptions(mapOptions);
 
-            let currentPositionMarker = new google.maps.Marker({
+            this.currentPositionMarker = new google.maps.Marker({
               map: this.map,
-              animation: google.maps.Animation.DROP,
-              position: latLng
+              position: latLng,
+              icon: this.circle
             });
 
             var self = this;
             this.map.addListener('click', function(event){
               self.addMarker(event.latLng);
             });
+            
 
       });
   }
 
   addMarker(position){
-    if(this.marker)
-      this.marker.setMap(null);
-    this.marker = new google.maps.Marker({
+    if(this.lockBtnText == "Lock Marker"){
+      if(this.marker)
+        this.marker.setMap(null);
+
+      this.marker = new google.maps.Marker({
       map: this.map,
       animation: google.maps.Animation.DROP,
       position: position
     });
       this.map.panTo(position);
+    }
   }
+
+  removeMarker(){
+    if(this.marker && this.lockBtnText == "Lock Marker")
+      this.marker.setMap(null);
+  }
+
+  myLocation(){
+    this.map.panTo(this.currentPositionMarker.position);
+  }
+
+  destination(){
+    if(!this.marker)
+      return;
+    
+    if(this.marker.getMap())
+      this.map.panTo(this.marker.position);
+    
+    else
+      return;
+    
+  }
+
+  lockBtn(){
+    console.log("log btn");
+    if(this.lockBtnText == "Lock Marker")
+      this.lockBtnText = "Unlock Marker";
+    else
+      this.lockBtnText = "Lock Marker";
+  }
+
+  
 }

@@ -1,9 +1,15 @@
 <ion-header>
-  <ion-navbar>
+  <ion-navbar color="primary">
     <ion-title>Home</ion-title>
   </ion-navbar>
 </ion-header>
 
-<ion-content padding>
+<ion-content>
   <div #map id="map"></div>
+  <div class="btn-container">
+    <button (click)="myLocation()" class="btn" ion-button round>My Location</button>
+    <button (click)="lockBtn()"  class="btn" ion-button style="background-color:purple" round>{{lockBtnText}}</button>
+    <button (click)="removeMarker()" class="btn" ion-button color="danger" round>Remove Marker</button>
+    <button (click)="destination()" class="btn" color="secondary" ion-button round>Desination</button>
+  </div>
 </ion-content>
