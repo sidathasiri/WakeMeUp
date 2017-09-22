@@ -30,6 +30,13 @@ export class HomePage {
       }
 
       this.map = new google.maps.Map(this.mapElement.nativeElement, mapOptions);
+
+      new google.maps.Marker({
+        map: this.map,
+        animation: google.maps.Animation.DROP,
+        position: latLng
+      });
+
       var self = this;
       this.map.addListener('click', function(event){
         self.addMarker(event.latLng);
