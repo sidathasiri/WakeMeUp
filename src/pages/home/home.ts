@@ -20,36 +20,33 @@ export class HomePage {
   }
 
   initMap(){
-    this.geolocation.getCurrentPosition().then((position) => {
-      let latLng = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
+    this.map = new google.maps.Map(this.mapElement.nativeElement);
+    const subscription = this.geolocation.watchPosition().subscribe(
+      position => {
+            console.log(position.coords.longitude + ' ' + position.coords.latitude);
 
-      let mapOptions = {
-        center: latLng,
-        zoom: 15,
-        mapTypeId: google.maps.MapTypeId.ROADMAP
-      }
+            let latLng = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
 
-      this.map = new google.maps.Map(this.mapElement.nativeElement, mapOptions);
+            let mapOptions = {
+              center: latLng,
+              zoom: 15,
+              mapTypeId: google.maps.MapTypeId.ROADMAP
+            }
 
-      let currentPositionMarker = new google.maps.Marker({
-        map: this.map,
-        animation: google.maps.Animation.DROP,
-        position: latLng
+            this.map.setOptions(mapOptions);
+
+            let currentPositionMarker = new google.maps.Marker({
+              map: this.map,
+              animation: google.maps.Animation.DROP,
+              position: latLng
+            });
+
+            var self = this;
+            this.map.addListener('click', function(event){
+              self.addMarker(event.latLng);
+            });
+
       });
-
-      var self = this;
-      this.map.addListener('click', function(event){
-        self.addMarker(event.latLng);
-      });
-
-       this.geolocation.watchPosition((position) => {
-        console.log(position);
-       // currentPositionMarker.setPosition(position);
-      });
-
-    }, (err) => {
-      console.log(err);
-    });
   }
 
   addMarker(position){
