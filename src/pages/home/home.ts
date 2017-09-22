@@ -24,7 +24,7 @@ export class HomePage {
     };
 
   constructor(public navCtrl: NavController, private geolocation: Geolocation) {
-    
+
   }
 
   ionViewDidLoad(){
@@ -33,31 +33,30 @@ export class HomePage {
 
   initMap(){
     this.map = new google.maps.Map(this.mapElement.nativeElement);
+
+    let mapOptions = {
+      center: new google.maps.LatLng(6.927079, 79.861244),
+      zoom: 15,
+      mapTypeId: google.maps.MapTypeId.ROADMAP
+    };
+
+    this.map.setOptions(mapOptions);
+
+    this.currentPositionMarker = new google.maps.Marker({
+      map: this.map,
+      icon: this.circle
+    });
+
+    var self = this;
+    this.map.addListener('click', function(event){
+      self.addMarker(event.latLng);
+    });
+
     const subscription = this.geolocation.watchPosition().subscribe(
       position => {
             console.log(position.coords.longitude + ' ' + position.coords.latitude);
-
             let latLng = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
-
-            let mapOptions = {
-              center: latLng,
-              zoom: 15,
-              mapTypeId: google.maps.MapTypeId.ROADMAP
-            }
-
-            this.map.setOptions(mapOptions);
-
-            this.currentPositionMarker = new google.maps.Marker({
-              map: this.map,
-              position: latLng,
-              icon: this.circle
-            });
-
-            var self = this;
-            this.map.addListener('click', function(event){
-              self.addMarker(event.latLng);
-            });
-            
+            this.currentPositionMarker.setPosition(latLng);
 
       });
   }
@@ -88,13 +87,13 @@ export class HomePage {
   destination(){
     if(!this.marker)
       return;
-    
+
     if(this.marker.getMap())
       this.map.panTo(this.marker.position);
-    
+
     else
       return;
-    
+
   }
 
   lockBtn(){
@@ -105,5 +104,5 @@ export class HomePage {
       this.lockBtnText = "Lock Marker";
   }
 
-  
+
 }
