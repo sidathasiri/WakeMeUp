@@ -52,7 +52,11 @@ export class HomePage {
       self.addMarker(event.latLng);
     });
 
-    const subscription = this.geolocation.watchPosition().subscribe(
+    const subscription = this.geolocation.watchPosition({
+      enableHighAccuracy: true,
+      timeout: 1000,
+      maximumAge: 0
+    }).subscribe(
       position => {
             console.log(position.coords.longitude + ' ' + position.coords.latitude);
             let latLng = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
